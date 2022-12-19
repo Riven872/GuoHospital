@@ -1,4 +1,4 @@
-package com.edu.guoHos.common;
+package com.edu.guoHosp.common;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
