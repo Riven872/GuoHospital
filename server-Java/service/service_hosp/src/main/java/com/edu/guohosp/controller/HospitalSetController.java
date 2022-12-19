@@ -83,7 +83,7 @@ public class HospitalSetController {
      * @return
      */
     @ApiOperation("新增医院设置")
-    @PostMapping("/saveHospSet")
+    @PostMapping("/saveHospitalSet")
     public Result saveHospSet(@RequestBody HospitalSet hospitalSet) {
         hospitalSet.setStatus(1);//状态为可用
         hospitalSet.setSignKey(MD5.encrypt(System.currentTimeMillis() + new Random().nextInt(1000) + ""));//签名密钥
@@ -103,7 +103,7 @@ public class HospitalSetController {
      * @return
      */
     @ApiOperation("根据id查询对应的医院设置")
-    @GetMapping("/getHospSetById/{id}")
+    @GetMapping("/getHospSet/{id}")
     public Result getHospSetById(@PathVariable Long id) {
         HospitalSet hospitalSet = hospitalSetService.getById(id);
 
@@ -121,7 +121,7 @@ public class HospitalSetController {
      * @return
      */
     @ApiOperation("修改医院设置的信息")
-    @PostMapping("/updateHospSetById")
+    @PostMapping("/updateHospitalSet")
     public Result updateHospSetById(@RequestBody HospitalSet hospitalSet) {
         boolean isUpdate = hospitalSetService.updateById(hospitalSet);
         if (isUpdate) {
@@ -138,7 +138,7 @@ public class HospitalSetController {
      * @return
      */
     @ApiOperation("批量删除医院设置")
-    @PostMapping("/batchRemoveHospSet")
+    @DeleteMapping("/batchRemoveHospSet")
     public Result batchRemoveHospSet(@RequestBody List<Long> ids) {
         boolean isRemove = hospitalSetService.removeByIds(ids);
 
@@ -156,11 +156,12 @@ public class HospitalSetController {
      * @return
      */
     @ApiOperation("修改医院的可用状态")
-    @PutMapping("/lockHospSet/{id}/{status}")
+    @PutMapping("/lockHospitalSet/{id}/{status}")
     public Result lockHospSet(@PathVariable Long id, @PathVariable Integer status) {
         HospitalSet hospitalSet = hospitalSetService.getById(id);
         if (hospitalSet != null) {
             hospitalSet.setStatus(status);
+            hospitalSetService.updateById(hospitalSet);
             return Result.ok();
         } else {
             return Result.fail();
