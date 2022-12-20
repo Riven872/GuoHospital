@@ -29,3 +29,9 @@ hs_err_pid*
 *.iml
 .idea
 *.iml
+*.iml
+
+**/*.iml
+**/*.idea
+**/target
+**/out
