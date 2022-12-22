@@ -1,4 +1,4 @@
-package com.edu.guoHosp.common.utils;
+package com.edu.guohosp.common.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

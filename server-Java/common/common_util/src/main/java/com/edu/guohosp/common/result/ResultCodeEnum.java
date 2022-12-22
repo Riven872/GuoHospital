@@ -1,4 +1,4 @@
-package com.edu.guoHosp.common.result;
+package com.edu.guohosp.common.result;
 
 import lombok.Getter;
 

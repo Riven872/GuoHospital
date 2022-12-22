@@ -1,6 +1,6 @@
-package com.edu.guoHosp.common.exception;
+package com.edu.guohosp.common.exception;
 
-import com.edu.guoHosp.common.result.ResultCodeEnum;
+import com.edu.guohosp.common.result.ResultCodeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

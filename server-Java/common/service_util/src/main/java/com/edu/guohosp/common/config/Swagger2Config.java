@@ -1,4 +1,4 @@
-package com.edu.guoHosp.common.config;
+package com.edu.guohosp.common.config;
 
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;

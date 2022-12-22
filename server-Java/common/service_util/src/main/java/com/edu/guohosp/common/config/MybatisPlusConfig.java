@@ -1,4 +1,4 @@
-package com.edu.guoHosp.common.config;
+package com.edu.guohosp.common.config;
 
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @EnableTransactionManagement //事务处理
 @Configuration
-@MapperScan("com.edu.guoHosp.mapper")
+@MapperScan("com.edu.guohosp.mapper")
 public class MybatisPlusConfig {
 
     /**

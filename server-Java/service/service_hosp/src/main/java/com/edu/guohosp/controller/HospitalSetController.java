@@ -2,8 +2,8 @@ package com.edu.guohosp.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.edu.guoHosp.common.result.Result;
-import com.edu.guoHosp.common.utils.MD5;
+import com.edu.guohosp.common.result.Result;
+import com.edu.guohosp.common.utils.MD5;
 import com.edu.guohosp.model.hosp.HospitalSet;
 import com.edu.guohosp.service.HospitalSetService;
 import com.edu.guohosp.vo.hosp.HospitalQueryVo;

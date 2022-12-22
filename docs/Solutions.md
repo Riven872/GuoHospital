@@ -24,6 +24,13 @@
                     .like(!StringUtils.isEmpty(queryVo.getHoscode()), HospitalSet::getHoscode, queryVo.getHoscode());
     ```
 
+###### 2、MybatisPlus中，IService接口与BaseMapper接口的区别
+
+- 在实现类中，既可以直接用`this.方法名`来操作数据库，也可以this.BaseMapper.方法名来操作数据库（是因为实现类impl继承了ServiceImp<>，而ServiceImp<>中，又自动注入了BaseMapper）
+- IService主要针对的是业务层，BaseMapper主要针对的是DAO层
+- IService是BaseMapper的补充，有批处理操作
+- 但是复杂的SQL查询还是要依靠BaseMapper对应的XML写语句
+
 
 
 

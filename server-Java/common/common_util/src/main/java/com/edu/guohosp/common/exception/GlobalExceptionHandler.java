@@ -1,6 +1,6 @@
-package com.edu.guoHosp.common.exception;
+package com.edu.guohosp.common.exception;
 
-import com.edu.guoHosp.common.result.Result;
+import com.edu.guohosp.common.result.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
