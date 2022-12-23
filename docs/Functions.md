@@ -96,7 +96,7 @@
 
 - 数据字典经常查询，且不经常改变，因此适合放入缓存中。
 - 配置RedisConfig，自定义key生成规则、自定义Redis序列化器和TTL时间，并使用注解`@EnableCaching`开启缓存功能
-- 在实现类的查询方法上添加注解`@Cacheable(value = "dict", keyGenerator = "keyGenerator")`，表明该方法的返回值写到redis中，在更新数据的方法上添加`@CacheEvict(value = "dict", allEntries = true)`，表示有数据更新时就从缓存中移除
+- 在实现类的查询方法上添加注解`@Cacheable(value = "dict", keyGenerator = "keyGenerator")`，表明该方法的返回值写到redis中，在更新数据的方法上添加`@CacheEvict(value = "dict", allEntries = true)`，表示有数据更新时就从缓存中移除。其中value表示操作的缓存key是哪一个（实际中key=value+keyGenerator ），而`@Cacheable`和`@CacheEvict`中的value一致时，可以表示同名的可缓存操作，一个添加缓存，一个删除缓存。因此value只是idea层面的唯一标识。
 
 ###### 4、使用Nginx做请求转发
 
