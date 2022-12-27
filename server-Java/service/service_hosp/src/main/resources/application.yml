@@ -27,11 +27,11 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
-#  cloud:
-#    #nacos注册中心地址
-#    nacos:
-#      discovery:
-#        server-addr: 127.0.0.1.:8848
+  cloud:
+    #nacos注册中心地址
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 mybatis-plus:
   #mapper文件路径
@@ -44,3 +44,4 @@ mybatis-plus:
 #feign:
 #  sentinel:
 #    enabled: true
+

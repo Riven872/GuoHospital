@@ -15,10 +15,11 @@ import java.util.List;
 @Api("数据字典模块")
 @RestController
 @RequestMapping("/admin/cmn/dict")
-@CrossOrigin
+
 public class DictController {
     @Resource
     private DictService dictService;
+
     /**
      * 根据父id查询子数据列表
      * @param parentId
@@ -47,10 +48,44 @@ public class DictController {
      * @param file 读取用户上传的文件
      * @return
      */
-    @PostMapping("importData")
+    @PostMapping("/importData")
     @ApiOperation("导入数据字典")
     public Result importDict(MultipartFile file){
         dictService.importData(file);
         return Result.ok();
+    }
+
+    /**
+     * 根据code和value查询对应的name
+     * @param dictCode
+     * @param value
+     * @return
+     */
+    @GetMapping("/getName/{dictCode}/{value}")
+    public String getName(@PathVariable String dictCode, @PathVariable String value){
+        String dictName = dictService.getDictName(dictCode, value);
+        return dictName;
+    }
+
+    /**
+     * 根据value查询对应的name
+     * @param value
+     * @return
+     */
+    @GetMapping("/getName/{value}")
+    public String getName(@PathVariable String value){
+        String dictName = dictService.getDictName("", value);
+        return dictName;
+    }
+
+    /**
+     * 根据code获取下级节点
+     * @param dictCode
+     * @return
+     */
+    @GetMapping("/findByDictCode/{dictCode}")
+    public Result findByDictCode(@PathVariable String dictCode){
+        List<Dict> list = dictService.findByDictCode(dictCode);
+        return Result.ok(list);
     }
 }

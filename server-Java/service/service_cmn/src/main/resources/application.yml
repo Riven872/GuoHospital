@@ -34,11 +34,11 @@ spring:
         min-idle: 1
         time-between-eviction-runs: 10s
 
-#  cloud:
-#    #nacos注册中心地址
-#    nacos:
-#      discovery:
-#        server-addr: 127.0.0.1.:8848
+  cloud:
+    #nacos注册中心地址
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 mybatis-plus:
   #mapper文件路径
