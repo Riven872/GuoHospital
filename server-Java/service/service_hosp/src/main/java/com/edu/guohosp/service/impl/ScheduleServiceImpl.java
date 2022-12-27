@@ -6,16 +6,22 @@ import com.edu.guohosp.repository.ScheduleRepository;
 import com.edu.guohosp.service.DepartmentService;
 import com.edu.guohosp.service.HospitalService;
 import com.edu.guohosp.service.ScheduleService;
+import com.edu.guohosp.vo.hosp.BookingScheduleRuleVo;
 import com.edu.guohosp.vo.hosp.ScheduleQueryVo;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -122,6 +128,87 @@ public class ScheduleServiceImpl implements ScheduleService {
                 break;
         }
         return dayOfWeek;
+    }
+
+    /**
+     * 根据医院编号和科室编号查询排班规则
+     *
+     * @param page
+     * @param limit
+     * @param hoscode
+     * @param depcode
+     * @return
+     */
+    @Override
+    public Map<String, Object> getRuleSchedule(Long page, Long limit, String hoscode, String depcode) {
+        //根据医院编号和科室编号查询
+        Criteria criteria = Criteria.where("hoscode").is(hoscode).and("depcode").is(depcode);
+        //根据工作日期进行分组
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(criteria), //匹配条件
+                Aggregation.group("workDate").first("workDate").as("workDate")//分组字段
+                        .count().as("docCount")
+                        .sum("reservedNumber").as("reservedNumber")//科室可预约数
+                        .sum("availableNumber").as("availableNumber"),//科室剩余数
+                Aggregation.sort(Sort.Direction.DESC, "workDate"),//排序
+                Aggregation.skip((page - 1) * limit),
+                Aggregation.limit(limit)//分页
+        );
+
+        AggregationResults<BookingScheduleRuleVo> aggResult = mongoTemplate.aggregate(agg, Schedule.class, BookingScheduleRuleVo.class);
+        List<BookingScheduleRuleVo> bookingScheduleRuleVoList = aggResult.getMappedResults();
+        //分组查询总记录数
+        Aggregation totalAgg = Aggregation.newAggregation(
+                Aggregation.match(criteria), //匹配条件
+                Aggregation.group("workDate")//分组字段
+        );
+        AggregationResults<BookingScheduleRuleVo> aggTotalResult = mongoTemplate.aggregate(totalAgg, Schedule.class, BookingScheduleRuleVo.class);
+        int size = aggTotalResult.getMappedResults().size();
+
+        for (BookingScheduleRuleVo bookingScheduleRuleVo : bookingScheduleRuleVoList) {
+            Date workDate = bookingScheduleRuleVo.getWorkDate();
+            String dayOfWeek = this.getDayOfWeek(new DateTime(workDate));
+            bookingScheduleRuleVo.setDayOfWeek(dayOfWeek);
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("bookingScheduleRuleList", bookingScheduleRuleVoList);
+        map.put("total", size);
+        //获取医院名称
+        String hosName = hospitalService.getHospName(hoscode);
+        //其他基础数据
+        Map<String, String> baseMap = new HashMap<>();
+        baseMap.put("hosname", hosName);
+        map.put("baseMap", baseMap);
+        return map;
+    }
+
+    /**
+     * 根据医院编号、科室编号和工作日期，查询排班详细信息
+     *
+     * @param hoscode
+     * @param depcode
+     * @param workDate
+     * @return
+     */
+    @Override
+    public List<Schedule> getScheduleDetail(String hoscode, String depcode, String workDate) {
+        List<Schedule> list = scheduleRepository.findScheduleByHoscodeAndDepcodeAndWorkDate(hoscode, depcode, new DateTime(workDate).toDate());
+        list.forEach(this::packageSchedule);
+        return list;
+    }
+
+    /**
+     * 封装排班详情的其他值：医院名称、科室名称、日期对应星期
+     * @param schedule
+     */
+    private void packageSchedule(Schedule schedule) {
+        //设置医院名称
+        schedule.getParam().put("hosname", hospitalService.getHospName(schedule.getHoscode()));
+        //设置科室名称
+        schedule.getParam().put("depname", departmentService.getDepName(schedule.getHoscode(), schedule.getDepcode()));
+        //设置对应周期
+        schedule.getParam().put("dayOfWeek", this.getDayOfWeek(new DateTime(schedule.getWorkDate())));
     }
 
 }

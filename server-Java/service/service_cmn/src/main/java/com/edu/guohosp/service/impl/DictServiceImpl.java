@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -76,6 +77,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     /**
      * 导入数据字典
+     *
      * @param file
      */
     @Override
@@ -83,5 +85,38 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @CacheEvict(value = "dict", allEntries = true)
     public void importData(MultipartFile file) {
         EasyExcel.read(file.getInputStream(), DictEeVo.class, dictListener).sheet().doRead();
+    }
+
+    /**
+     * 根据code和value查询name
+     *
+     * @param dictCode
+     * @param value
+     * @return
+     */
+    @Override
+    public String getDictName(String dictCode, String value) {
+        Dict dict;
+        if (StringUtils.isEmpty(dictCode)) {
+            dict = this.getOne(new LambdaQueryWrapper<Dict>().eq(Dict::getValue, value));
+        } else {
+            dict = this.getOne(new LambdaQueryWrapper<Dict>().eq(Dict::getDictCode, dictCode));
+            dict = this.getOne(new LambdaQueryWrapper<Dict>()
+                    .eq(Dict::getParentId, dict.getId())
+                    .eq(Dict::getValue, value));
+        }
+        return dict.getName();
+    }
+
+    /**
+     * 根据code获取下级节点
+     * @param dictCode
+     * @return
+     */
+    @Override
+    public List<Dict> findByDictCode(String dictCode) {
+        Dict dict = this.getOne(new LambdaQueryWrapper<Dict>().eq(Dict::getDictCode, dictCode));
+        List<Dict> list = this.findChildData(dict.getParentId());
+        return list;
     }
 }

@@ -27,13 +27,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void save(Map<String, Object> paramMap) {
         //paramMap 转换department对象
         String paramMapString = JSONObject.toJSONString(paramMap);
-        Department department = JSONObject.parseObject(paramMapString,Department.class);
+        Department department = JSONObject.parseObject(paramMapString, Department.class);
 
         //根据医院编号 和 科室编号查询
         Department departmentExist = departmentRepository.
-                getDepartmentByHoscodeAndDepcode(department.getHoscode(),department.getDepcode());
+                getDepartmentByHoscodeAndDepcode(department.getHoscode(), department.getDepcode());
         //判断
-        if(departmentExist!=null) {
+        if (departmentExist != null) {
             departmentExist.setUpdateTime(new Date());
             departmentExist.setIsDeleted(0);
             departmentRepository.save(departmentExist);
@@ -49,16 +49,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Page<Department> findPageDepartment(int page, int limit, DepartmentQueryVo departmentQueryVo) {
         // 创建Pageable对象，设置当前页和每页记录数
         //0是第一页
-        Pageable pageable = PageRequest.of(page-1,limit);
+        Pageable pageable = PageRequest.of(page - 1, limit);
         // 创建Example对象
         Department department = new Department();
-        BeanUtils.copyProperties(departmentQueryVo,department);
+        BeanUtils.copyProperties(departmentQueryVo, department);
         department.setIsDeleted(0);
 
         ExampleMatcher matcher = ExampleMatcher.matching()
-            .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-            .withIgnoreCase(true);
-        Example<Department> example = Example.of(department,matcher);
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase(true);
+        Example<Department> example = Example.of(department, matcher);
 
         Page<Department> all = departmentRepository.findAll(example, pageable);
         return all;
@@ -69,13 +69,18 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void remove(String hoscode, String depcode) {
         //根据医院编号 和 科室编号查询
         Department department = departmentRepository.getDepartmentByHoscodeAndDepcode(hoscode, depcode);
-        if(department != null) {
+        if (department != null) {
             //调用方法删除
             departmentRepository.deleteById(department.getId());
         }
     }
 
-    //根据医院编号，查询医院所有科室列表
+    /**
+     * 根据医院编号，查询医院所有科室列表
+     *
+     * @param hoscode
+     * @return
+     */
     @Override
     public List<DepartmentVo> findDeptTree(String hoscode) {
         //创建list集合，用于最终数据封装
@@ -92,7 +97,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         Map<String, List<Department>> deparmentMap =
                 departmentList.stream().collect(Collectors.groupingBy(Department::getBigcode));
         //遍历map集合 deparmentMap
-        for(Map.Entry<String,List<Department>> entry : deparmentMap.entrySet()) {
+        for (Map.Entry<String, List<Department>> entry : deparmentMap.entrySet()) {
             //大科室编号
             String bigcode = entry.getKey();
             //大科室编号对应的全局数据
@@ -104,8 +109,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
             //封装小科室
             List<DepartmentVo> children = new ArrayList<>();
-            for(Department department: deparment1List) {
-                DepartmentVo departmentVo2 =  new DepartmentVo();
+            for (Department department : deparment1List) {
+                DepartmentVo departmentVo2 = new DepartmentVo();
                 departmentVo2.setDepcode(department.getDepcode());
                 departmentVo2.setDepname(department.getDepname());
                 //封装到list集合
@@ -124,7 +129,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public String getDepName(String hoscode, String depcode) {
         Department department = departmentRepository.getDepartmentByHoscodeAndDepcode(hoscode, depcode);
-        if(department != null) {
+        if (department != null) {
             return department.getDepname();
         }
         return null;
