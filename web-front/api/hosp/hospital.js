@@ -5,7 +5,7 @@ const api_name = `/api/hosp/hospital`
 export default {
   getPageList(page, limit, searchObj) {
     return request({
-      url: `${api_name}/${page}/${limit}`,
+      url: `${api_name}/findHospList/${page}/${limit}`,
       method: 'get',
       params: searchObj
     })
@@ -20,7 +20,7 @@ export default {
 
   show(hoscode) {
     return request({
-      url: `${api_name}/${hoscode}`,
+      url: `${api_name}/findHospDetail/${hoscode}`,
       method: 'get'
     })
   },
