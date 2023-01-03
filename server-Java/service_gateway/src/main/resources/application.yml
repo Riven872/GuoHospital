@@ -32,3 +32,8 @@ spring:
           uri: lb://service-msm
           predicates:
             - Path=/*/msm/**
+
+        - id: service-oss
+          uri: lb://service-oss
+          predicates:
+            - Path=/*/oss/**
