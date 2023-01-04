@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.edu.guohosp.common.exception.YyghException;
 import com.edu.guohosp.common.helper.JwtHelper;
 import com.edu.guohosp.common.result.ResultCodeEnum;
+import com.edu.guohosp.enums.AuthStatusEnum;
 import com.edu.guohosp.mapper.UserInfoMapper;
 import com.edu.guohosp.model.user.UserInfo;
 import com.edu.guohosp.service.UserInfoService;
 import com.edu.guohosp.vo.user.LoginVo;
+import com.edu.guohosp.vo.user.UserAuthVo;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -45,7 +47,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
             throw new YyghException(ResultCodeEnum.PARAM_ERROR);
         }
         //endregion
-
 
         //region 判断手机验证码是否与输入的验证码一致
         String redisCode = redisTemplate.opsForValue().get(phone);
@@ -87,5 +88,29 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         //endregion
 
         return map;
+    }
+
+    /**
+     * 根据用户id和封装的用户信息进行用户信息的认证
+     * @param userId
+     * @param userAuthVo
+     */
+    @Override
+    public void userAuth(Long userId, UserAuthVo userAuthVo) {
+        //region 根据用户id查询用户信息
+        UserInfo userInfo = this.getById(userId);
+        //endregion
+
+        //region 设置认证信息
+        userInfo.setName(userAuthVo.getName());//认证人姓名
+        userInfo.setCertificatesType(userAuthVo.getCertificatesType());//证件类型
+        userInfo.setCertificatesNo(userAuthVo.getCertificatesNo());//证件编号
+        userInfo.setCertificatesUrl(userAuthVo.getCertificatesUrl());//证件路径
+        userInfo.setAuthStatus(AuthStatusEnum.AUTH_RUN.getStatus());//认证状态
+        //endregion
+
+        //region 更新认证信息
+        this.updateById(userInfo);
+        //endregion
     }
 }

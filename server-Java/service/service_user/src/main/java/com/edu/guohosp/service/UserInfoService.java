@@ -3,6 +3,7 @@ package com.edu.guohosp.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.edu.guohosp.model.user.UserInfo;
 import com.edu.guohosp.vo.user.LoginVo;
+import com.edu.guohosp.vo.user.UserAuthVo;
 
 import java.util.Map;
 
@@ -18,4 +19,6 @@ import java.util.Map;
 public interface UserInfoService extends IService<UserInfo> {
     //用户手机号登录
     Map<String, Object> loginUser(LoginVo loginVo);
+
+    void userAuth(Long userId, UserAuthVo userAuthVo);
 }

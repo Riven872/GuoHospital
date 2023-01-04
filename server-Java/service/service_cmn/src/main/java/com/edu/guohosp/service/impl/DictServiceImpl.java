@@ -116,7 +116,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @Override
     public List<Dict> findByDictCode(String dictCode) {
         Dict dict = this.getOne(new LambdaQueryWrapper<Dict>().eq(Dict::getDictCode, dictCode));
-        List<Dict> list = this.findChildData(dict.getParentId());
+        List<Dict> list = this.findChildData(dict.getId());
         return list;
     }
 }
