@@ -1,0 +1,59 @@
+server:
+  #应用端口号
+  port: 8205
+
+spring:
+  #应用名称
+  application:
+    name: service-oss
+
+  #环境设置
+  profiles:
+    active: dev
+
+#  data:
+#    mongodb:
+#      uri: mongodb://192.168.31.100:27017/yygh_hosp
+
+  #mysql数据库连接
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/yygh_hosp?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+#    username: root
+#    password: 123
+
+  #返回Json的全局时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  cloud:
+    #nacos注册中心地址
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+#mybatis-plus:
+#  #mapper文件路径
+#  mapper-locations: classpath:com/edu/guohosp/mapper/xml/*.xml
+#  #开启控制台SQL语句的输出
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+##开启sentinel
+#feign:
+#  sentinel:
+#    enabled: true
+
+#阿里云oss对象存储
+aliyun:
+  oss:
+    # 地域节点
+    endPoint: oss-cn-shanghai.aliyuncs.com
+    # key
+    accessKeyId: LTAI5t8uYEfnGBn79fUTPxQR
+    # secret
+    secret: ZwC4LAmG0VkhezQlwzBG6Zt2UFEqZG
+    # bucket
+    bucket: guohosp
+
