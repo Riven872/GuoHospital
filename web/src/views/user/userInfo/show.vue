@@ -38,7 +38,6 @@
 
     <h4>就诊人信息</h4>
     <el-table
-      v-loading="listLoading"
       :data="patientList"
       stripe
       style="width: 100%">
@@ -67,7 +66,7 @@
           {{ scope.row.isMarry == 1 ? '时' : '否' }}
         </template>
       </el-table-column>
-      <el-table-column prop="fullAddress" label="地址"/>
+      <el-table-column prop="address" label="地址"/>
       <el-table-column prop="createTime" label="注册时间"/>
     </el-table>
 

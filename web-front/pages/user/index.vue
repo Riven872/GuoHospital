@@ -90,7 +90,7 @@
                 </div>
               </el-form-item>
               <el-form-item prop="name" label="证件类型：">
-                {{ userInfo.param.certificatesTypeString }}
+                {{ userInfo.certificatesType }}
               </el-form-item>
               <el-form-item prop="name" label="证件号码：">
                 {{ userInfo.certificatesNo }}

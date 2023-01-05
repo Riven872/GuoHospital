@@ -1,4 +1,4 @@
-package com.edu.guohosp.controller;
+package com.edu.guohosp.controller.api;
 
 import com.edu.guohosp.common.result.Result;
 import com.edu.guohosp.common.utils.AuthContextHolder;
@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author: Riven
  * @date: 2022/12/29 0029 11:11
- * @description：
+ * @description: 用户登录、认证接口
  * @project: server-Java
  * @version: 1.0
  */

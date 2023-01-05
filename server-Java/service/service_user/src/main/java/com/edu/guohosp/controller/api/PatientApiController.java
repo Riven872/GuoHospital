@@ -1,4 +1,4 @@
-package com.edu.guohosp.controller;
+package com.edu.guohosp.controller.api;
 
 import com.edu.guohosp.common.result.Result;
 import com.edu.guohosp.common.utils.AuthContextHolder;

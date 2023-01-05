@@ -41,7 +41,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientMapper, Patient> impl
         //region 通过远程调用，得到编码对应具体内容，查询数据字典表的内容
         patients.forEach(e -> this.packPatient(e));
         //endregion
-        return null;
+        return patients;
     }
 
     // 将其他参数进行封装（将类型由数字变成具体的名称）
