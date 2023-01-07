@@ -2,8 +2,10 @@ package com.edu.guohosp.controller.api;
 
 import com.edu.guohosp.common.result.Result;
 import com.edu.guohosp.model.hosp.Hospital;
+import com.edu.guohosp.model.hosp.Schedule;
 import com.edu.guohosp.service.DepartmentService;
 import com.edu.guohosp.service.HospitalService;
+import com.edu.guohosp.service.ScheduleService;
 import com.edu.guohosp.vo.hosp.HospitalQueryVo;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,9 @@ public class HospitalApiController {
 
     @Resource
     private DepartmentService departmentService;
+
+    @Resource
+    private ScheduleService scheduleService;
 
     /**
      * 查询医院列表
@@ -78,5 +83,43 @@ public class HospitalApiController {
     public Result item(@PathVariable String hoscode) {
         Map<String, Object> map = hospitalService.item(hoscode);
         return Result.ok(map);
+    }
+
+    /**
+     * 分页获取可预约排班数据
+     *
+     * @param page    当前页码
+     * @param limit   每页记录数
+     * @param hoscode 医院编码
+     * @param depcode 科室编码
+     * @return
+     */
+    @GetMapping("/auth/getBookingScheduleRule/{page}/{limit}/{hoscode}/{depcode}")
+    public Result getBookingSchedule(@PathVariable Integer page, @PathVariable Integer limit, @PathVariable String hoscode, @PathVariable String depcode) {
+        return Result.ok(scheduleService.getBookingScheduleRule(page, limit, hoscode, depcode));
+    }
+
+    /**
+     * 根据医院编号、科室编号和工作日期，查询排班详细信息
+     *
+     * @param hoscode 医院编码
+     * @param depcode 科室编码
+     * @param workDate 排班日期
+     * @return
+     */
+    @GetMapping("/auth/findScheduleList/{hoscode}/{depcode}/{workDate}")
+    public Result findScheduleList(@PathVariable String hoscode, @PathVariable String depcode, @PathVariable String workDate) {
+        return Result.ok(scheduleService.getScheduleDetail(hoscode, depcode, workDate));
+    }
+
+    /**
+     * 根据排班id获取排班数据
+     * @param scheduleId
+     * @return
+     */
+    @GetMapping("/getSchedule/{scheduleId}")
+    public Result getSchedule(@PathVariable String scheduleId){
+        Schedule schedule = scheduleService.getScheduleById(scheduleId);
+        return Result.ok(schedule);
     }
 }
