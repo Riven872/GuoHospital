@@ -5,10 +5,12 @@ import com.edu.guohosp.model.hosp.Hospital;
 import com.edu.guohosp.service.HospitalService;
 import com.edu.guohosp.vo.hosp.HospitalQueryVo;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /*
  * Copyright © 2022 https://github.com/Riven872 All rights reserved.
@@ -51,17 +53,5 @@ public class HospitalController {
     public Result updateHospStatus(@PathVariable String id, @PathVariable Integer status) {
         hospitalService.updateStatus(id, status);
         return Result.ok();
-    }
-
-    /**
-     * 查询医院详情
-     *
-     * @param id
-     * @return
-     */
-    @GetMapping("/showHospDetail/{id}")
-    public Result showHospitalDetail(@PathVariable String id) {
-        Map<String, Object> map = hospitalService.getHospById(id);
-        return Result.ok(map);
     }
 }

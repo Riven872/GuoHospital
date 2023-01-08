@@ -1,7 +1,9 @@
 package com.edu.guohosp.msm.service.impl;
 
 import com.edu.guohosp.msm.service.MsmService;
+import com.edu.guohosp.vo.msm.MsmVo;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /*
  * Copyright © 2022 https://github.com/Riven872 All rights reserved.
@@ -14,4 +16,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MsmServiceImpl implements MsmService {
+    /**
+     * mq使用发送短信
+     *
+     * @param msmVo
+     * @return
+     */
+    @Override
+    public boolean send(MsmVo msmVo) {
+        if (!StringUtils.isEmpty(msmVo.getPhone())) {
+            //调用发送短信的方法
+            return true;
+        }
+        return false;
+    }
 }

@@ -130,6 +130,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     /**
      * 查询医院详情
+     *
      * @param id
      * @return
      */
@@ -148,13 +149,14 @@ public class HospitalServiceImpl implements HospitalService {
 
     /**
      * 根据医院编号查询医院名称
+     *
      * @param hoscode
      * @return
      */
     @Override
     public String getHospName(String hoscode) {
         Hospital hospital = hospitalRepository.getHospitalByHoscode(hoscode);
-        if (hospital !=null) {
+        if (hospital != null) {
             return hospital.getHosname();
         }
         return null;
@@ -167,6 +169,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     /**
      * 根据医院编号获取医院的预约挂号详情
+     *
      * @param hoscode
      * @return
      */

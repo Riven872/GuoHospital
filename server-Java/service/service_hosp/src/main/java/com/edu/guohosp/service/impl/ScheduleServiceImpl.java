@@ -2,6 +2,8 @@ package com.edu.guohosp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.edu.guohosp.common.exception.YyghException;
+import com.edu.guohosp.common.result.ResultCodeEnum;
 import com.edu.guohosp.model.hosp.BookingRule;
 import com.edu.guohosp.model.hosp.Department;
 import com.edu.guohosp.model.hosp.Hospital;
@@ -11,6 +13,7 @@ import com.edu.guohosp.service.DepartmentService;
 import com.edu.guohosp.service.HospitalService;
 import com.edu.guohosp.service.ScheduleService;
 import com.edu.guohosp.vo.hosp.BookingScheduleRuleVo;
+import com.edu.guohosp.vo.hosp.ScheduleOrderVo;
 import com.edu.guohosp.vo.hosp.ScheduleQueryVo;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -374,4 +377,77 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedule;
     }
 
+    /**
+     * 根据排班id获取预约下单数据
+     *
+     * @param scheduleId
+     * @return
+     */
+    @Override
+    public ScheduleOrderVo getScheduleOrderVo(String scheduleId) {
+        ScheduleOrderVo scheduleOrderVo = new ScheduleOrderVo();
+
+        //region 获取排班信息
+        Schedule schedule = this.getScheduleById(scheduleId);
+        if (schedule == null) {
+            throw new YyghException(ResultCodeEnum.PARAM_ERROR);
+        }
+        //endregion
+
+        //region 获取预约规则信息
+        Hospital hospital = hospitalService.getHospitalByHosCode(schedule.getHoscode());
+        if (hospital == null) {
+            throw new YyghException(ResultCodeEnum.PARAM_ERROR);
+        }
+        BookingRule bookingRule = hospital.getBookingRule();
+        if (bookingRule == null) {
+            throw new YyghException(ResultCodeEnum.PARAM_ERROR);
+        }
+        //endregion
+
+        //region 把获取数据设置到scheduleOrderVo
+        scheduleOrderVo.setHoscode(schedule.getHoscode());
+        scheduleOrderVo.setHosname(hospitalService.getHospName(schedule.getHoscode()));
+        scheduleOrderVo.setDepcode(schedule.getDepcode());
+        scheduleOrderVo.setDepname(departmentService.getDepName(schedule.getHoscode(), schedule.getDepcode()));
+        scheduleOrderVo.setHosScheduleId(schedule.getHosScheduleId());
+        scheduleOrderVo.setAvailableNumber(schedule.getAvailableNumber());
+        scheduleOrderVo.setTitle(schedule.getTitle());
+        scheduleOrderVo.setReserveDate(schedule.getWorkDate());
+        scheduleOrderVo.setReserveTime(schedule.getWorkTime());
+        scheduleOrderVo.setAmount(schedule.getAmount());
+        //endregion
+
+        //region 相关日期处理
+        //退号截止天数（如：就诊前一天为-1，当天为0）
+        int quitDay = bookingRule.getQuitDay();
+        DateTime quitTime = this.getDateTime(new DateTime(schedule.getWorkDate()).plusDays(quitDay).toDate(), bookingRule.getQuitTime());
+        scheduleOrderVo.setQuitTime(quitTime.toDate());
+
+        //预约开始时间
+        DateTime startTime = this.getDateTime(new Date(), bookingRule.getReleaseTime());
+        scheduleOrderVo.setStartTime(startTime.toDate());
+
+        //预约截止时间
+        DateTime endTime = this.getDateTime(new DateTime().plusDays(bookingRule.getCycle()).toDate(), bookingRule.getStopTime());
+        scheduleOrderVo.setEndTime(endTime.toDate());
+
+        //当天停止挂号时间
+        DateTime stopTime = this.getDateTime(new Date(), bookingRule.getStopTime());
+        scheduleOrderVo.setStopTime(stopTime.toDate());
+        //endregion
+
+        return scheduleOrderVo;
+    }
+
+    /**
+     * 使用mq更新排班数据
+     *
+     * @param schedule
+     */
+    @Override
+    public void updateByMq(Schedule schedule) {
+        schedule.setUpdateTime(new Date());
+        scheduleRepository.save(schedule);
+    }
 }

@@ -5,8 +5,11 @@ import com.edu.guohosp.model.hosp.Hospital;
 import com.edu.guohosp.model.hosp.Schedule;
 import com.edu.guohosp.service.DepartmentService;
 import com.edu.guohosp.service.HospitalService;
+import com.edu.guohosp.service.HospitalSetService;
 import com.edu.guohosp.service.ScheduleService;
 import com.edu.guohosp.vo.hosp.HospitalQueryVo;
+import com.edu.guohosp.vo.hosp.ScheduleOrderVo;
+import com.edu.guohosp.vo.order.SignInfoVo;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +40,9 @@ public class HospitalApiController {
 
     @Resource
     private ScheduleService scheduleService;
+
+    @Resource
+    private HospitalSetService hospitalSetService;
 
     /**
      * 查询医院列表
@@ -121,5 +127,25 @@ public class HospitalApiController {
     public Result getSchedule(@PathVariable String scheduleId){
         Schedule schedule = scheduleService.getScheduleById(scheduleId);
         return Result.ok(schedule);
+    }
+
+    /**
+     * 根据排班id获取预约下单数据（内部远程调用接口）
+     * @param scheduleId
+     * @return
+     */
+    @GetMapping("/inner/getScheduleOrderVo/{scheduleId}")
+    public ScheduleOrderVo getScheduleOrderVo(@PathVariable String scheduleId){
+        return scheduleService.getScheduleOrderVo(scheduleId);
+    }
+
+    /**
+     * 根据医院编号获取医院签名信息
+     * @param hoscode
+     * @return
+     */
+    @GetMapping("/inner/getSignInfoVo/{hoscode}")
+    public SignInfoVo getSignInfoVo(@PathVariable String hoscode){
+        return hospitalSetService.getSignInfoVo(hoscode);
     }
 }

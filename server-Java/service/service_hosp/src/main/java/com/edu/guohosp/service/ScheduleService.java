@@ -1,6 +1,7 @@
 package com.edu.guohosp.service;
 
 import com.edu.guohosp.model.hosp.Schedule;
+import com.edu.guohosp.vo.hosp.ScheduleOrderVo;
 import com.edu.guohosp.vo.hosp.ScheduleQueryVo;
 import org.springframework.data.domain.Page;
 
@@ -28,4 +29,10 @@ public interface ScheduleService {
 
     //根据排班id获取排班数据
     Schedule getScheduleById(String scheduleId);
+
+    //根据排班id获取预约下单数据
+    ScheduleOrderVo getScheduleOrderVo(String scheduleId);
+
+    //使用mq更新排班数据
+    void updateByMq(Schedule schedule);
 }
