@@ -60,9 +60,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
         // 获取排班相关信息
         ScheduleOrderVo scheduleOrderVo = hospitalFeignClient.getScheduleOrderVo(scheduleId);
         // 判断当前时间是否可以预约
-        if (new DateTime(scheduleOrderVo.getStartTime()).isAfterNow() || new DateTime(scheduleOrderVo.getEndTime()).isBeforeNow()) {
-            throw new YyghException(ResultCodeEnum.TIME_NO);
-        }
+        // if (new DateTime(scheduleOrderVo.getStartTime()).isAfterNow() || new DateTime(scheduleOrderVo.getEndTime()).isBeforeNow()) {
+        //     throw new YyghException(ResultCodeEnum.TIME_NO);
+        // }
         // 获取签名信息
         SignInfoVo signInfoVo = hospitalFeignClient.getSignInfoVo(scheduleOrderVo.getHoscode());
 
@@ -78,7 +78,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
         orderInfo.setPatientName(patient.getName());
         orderInfo.setPatientPhone(patient.getPhone());
         orderInfo.setOrderStatus(OrderStatusEnum.UNPAID.getStatus());
-        baseMapper.insert(orderInfo);
         this.save(orderInfo);
         //endregion
 
