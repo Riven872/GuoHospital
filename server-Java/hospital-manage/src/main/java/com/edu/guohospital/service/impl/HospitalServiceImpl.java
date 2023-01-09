@@ -66,8 +66,9 @@ public class HospitalServiceImpl implements HospitalService {
             //记录预约记录
             OrderInfo orderInfo = new OrderInfo();
             orderInfo.setPatientId(patientId);
-            orderInfo.setScheduleId(Long.parseLong(hosScheduleId));
-            int number = schedule.getReservedNumber().intValue() - schedule.getAvailableNumber().intValue();
+            Long aLong = Long.valueOf(hosScheduleId);
+            orderInfo.setScheduleId(Long.valueOf(hosScheduleId));
+            int number = schedule.getReservedNumber() - schedule.getAvailableNumber();
             orderInfo.setNumber(number);
             orderInfo.setAmount(new BigDecimal(amount));
             String fetchTime = "0".equals(reserveDate) ? " 09:30前" : " 14:00前";
