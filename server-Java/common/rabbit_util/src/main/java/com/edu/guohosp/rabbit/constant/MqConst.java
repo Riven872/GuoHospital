@@ -25,4 +25,12 @@ public class MqConst {
 
     public static final String QUEUE_MSM_ITEM = "queue.msm.item";
     //endregion
+
+    //region 定时任务
+    public static final String EXCHANGE_DIRECT_TASK = "exchange.direct.task";
+
+    public static final String ROUTING_TASK_8 = "task.8";
+
+    public static final String QUEUE_TASK_8 = "queue.task.8";
+    //endregion
 }
