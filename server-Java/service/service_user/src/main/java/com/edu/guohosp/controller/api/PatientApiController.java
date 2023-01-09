@@ -84,4 +84,14 @@ public class PatientApiController {
         patientService.removeById(id);
         return Result.ok();
     }
+
+    /**
+     * 根据就诊人id获取其信息（内部远程调用接口）
+     * @param id
+     * @return
+     */
+    @GetMapping("/inner/get/{id}")
+    public Patient getPatientOrder(@PathVariable Long id){
+        return patientService.getPatientById(id);
+    }
 }

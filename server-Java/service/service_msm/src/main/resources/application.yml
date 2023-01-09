@@ -33,3 +33,9 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
 
+  rabbitmq:
+    host: 192.168.31.100
+    port: 5672
+    username: root
+    password: 123
+

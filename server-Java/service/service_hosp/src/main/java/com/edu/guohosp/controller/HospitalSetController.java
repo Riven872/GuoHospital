@@ -150,6 +150,7 @@ public class HospitalSetController {
 
     /**
      * 修改医院的可用状态
+     *
      * @param id
      * @param status
      * @return
@@ -169,12 +170,13 @@ public class HospitalSetController {
 
     /**
      * 向管理系统发送密钥
+     *
      * @param id
      * @return
      */
     @ApiOperation("向管理系统发送密钥")
     @GetMapping("/sendSignKey/{id}")
-    public Result sendSignKey(@PathVariable Long id){
+    public Result sendSignKey(@PathVariable Long id) {
         HospitalSet set = hospitalSetService.getById(id);
         String hosCode = set.getHoscode();//获取医院编码
         String signKey = set.getSignKey();//获取医院密钥
