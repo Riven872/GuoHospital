@@ -1,6 +1,7 @@
 package com.edu.guohosp.order.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.edu.guohosp.client.HospitalFeignClient;
 import com.edu.guohosp.client.PatientFeignClient;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -151,5 +153,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implem
 
         // 返回订单id
         return orderInfo.getId();
+    }
+
+    /**
+     * 监听定时任务发送来的信息，然后发送就诊通知
+     */
+    @Override
+    public void patientTips() {
+        List<OrderInfo> orderInfoList = this.baseMapper.selectList(new LambdaQueryWrapper<OrderInfo>()
+                .eq(OrderInfo::getReserveDate, new DateTime().toString("yyyy-MM-dd"))
+                .ne(OrderInfo::getOrderStatus, OrderStatusEnum.CANCLE));
+        orderInfoList.forEach(e -> {
+            //将参数发送到mq中，短信监听到有消息后会发送短信
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_MSM, MqConst.QUEUE_MSM_ITEM, "拼接的参数");
+        });
     }
 }

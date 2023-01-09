@@ -15,4 +15,7 @@ import com.edu.guohosp.model.order.OrderInfo;
 public interface OrderService extends IService<OrderInfo> {
     //根据科室和就诊人创建挂号订单并返回订单id
     Long saveOrders(String scheduleId, Long patientId);
+
+    //监听定时任务发送来的信息，然后发送就诊通知
+    void patientTips();
 }
